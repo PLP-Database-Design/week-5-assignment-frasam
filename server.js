@@ -46,6 +46,8 @@ app.get('/data', (req,res) =>{
 });
 
 
+
+
 // listen to the server
 const PORT = 3000;
 app.listen(PORT, () =>{
