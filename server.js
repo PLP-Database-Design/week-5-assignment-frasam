@@ -1,62 +1,44 @@
-// initialing variable
-
-const express = require('express');
+const express = require("express");
 const app = express();
-const mysql = require('mysql2');
-const cors = require('cors');
-const dotenv = require('dotenv');
+const mysql = require("mysql2");
+const dotenv = require("dotenv");
 
-app.use(express.json());
-app.use(cors());
 dotenv.config();
 
-// connect to the database
+app.listen(3300, ()=>{
+    console.log("listen on port 3300");
+});
 
+// create an object of mysql 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
+    host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 
-
 });
+
+// Checking connection to mysql
 
 db.connect((err) =>{
-    // if any error 
-    if(err) return console.log ("cannot connect to the database");
-    console.log("sucessfully connect to the database with id", db.threadId)
+    // if error arises
+    if(err){
+        return console.log("error connecting to database", err)
+    }
+    console.log("connection to mysql successfull")
+
 });
 
-
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-
-//  question 1 
-app.get('/data', (req,res) =>{
-    db.query('SELECT * FROM patients', (err, results) =>{
-        if(err) { 
-            console.log(err);
-            res.status(500).send("Error retrieving data from the database");
-        } else {
-            res.render('data', {results: results});
+// accessing the end point
+app.get('', (req, res)=>{
+    // assigning a variable to mysql query
+    const patientRecord = "SELECT * FROM patients"
+    db.query(patientRecord, (err, data)=>{
+        if(err){
+            res.status(400).send("can't retirve records from mysql")
+        }else{
+            res.status(200).send(data);
         }
-          
-
-    }); 
-});
-
-
-
-
-// listen to the server
-const PORT = 3000;
-app.listen(PORT, () =>{
-    console.log(`listen to port ${PORT}`)
-
-    app.get('/', (req,res) =>{
-        res.send("server successfully started");
+        return
     });
 });
-
-
-
