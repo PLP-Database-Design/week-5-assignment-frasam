@@ -27,15 +27,73 @@ This demonstrates the cconnection of MySQL database and Node.js to create a simp
 
    
    // Question 1 goes here
+   // accessing the end point
+app.get('', (req, res)=>{
+    // assigning a variable to mysql query
+    const patientRecord = "SELECT patient_id, first_name, last_name, date_of_birth FROM patients"
+    db.query(patientRecord, (err, data)=>{
+        if(err){
+            res.status(400).send("can't retirve records from mysql")
+        }else{
+            res.status(200).send(data);
+        }
+        return
+    });
+});
 
 
    // Question 2 goes here
 
+   app.get('', (req, res)=>{
+    // assigning a variable to our query
+    const providersRecords = "SELECT first_name, last_name, provider_specialty FROM providers"
+
+    // querying our database
+    db.query(providersRecords, (err, data)=>{
+        // checking for errors form mysql database
+        if(err){
+            
+            res.status(400).send("error retriving records");
+        }
+        else{
+            res.status(200).send(data);
+        }
+        return;
+    });
+    
+});
+
 
    // Question 3 goes here
+   app.get('', (req, res)=>{
+    const patietnt_by_firstname = "SELECT first_name FROM patients"
+    db.query(patietnt_by_firstname, (err, data)=>{
+        if(err){
+            res.status(400).send("error accessing records")
+        }
+        else{
+            res.status(200).send(data)
+        }
+        return;
+    })
+})
 
 
    // Question 4 goes here
+   // retrieving records by specialty
+app.get('', (req, res)=>{
+    // creating variable for query
+    let specialty_records = "SELECT specialty FROM providers"
+    db.query(specialty_records, (err, data)=>{
+        if(err){
+            res.status(400).send("error retriving records")
+        }
+        else{
+            res.status(200).send(data)
+        }
+        return
+    })
+})
 
    
 

@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-app.listen(3300, ()=>{
+app.listen(3000, ()=>{
     console.log("listen on port 3300");
 });
 
@@ -31,8 +31,8 @@ db.connect((err) =>{
 
 // accessing the end point
 app.get('', (req, res)=>{
-    // assigning a variable to mysql query
-    const patientRecord = "SELECT * FROM patients"
+//     // assigning a variable to mysql query
+    const patientRecord = "SELECT patient_id, first_name, last_name, date_of_birth FROM patients"
     db.query(patientRecord, (err, data)=>{
         if(err){
             res.status(400).send("can't retirve records from mysql")
@@ -42,3 +42,52 @@ app.get('', (req, res)=>{
         return
     });
 });
+
+// retriveing all providers record
+app.get('', (req, res)=>{
+    // assigning a variable to our query
+    const providersRecords = "SELECT first_name, last_name, provider_specialty FROM providers"
+
+//     // querying our database
+    db.query(providersRecords, (err, data)=>{
+        // checking for errors form mysql database
+        if(err){
+            
+            res.status(400).send("error retriving records");
+        }
+        else{
+            res.status(200).send(data);
+        }
+        return;
+    });
+    
+});
+
+// filtering patients by first name
+app.get('', (req, res)=>{
+    const patietnt_by_firstname = "SELECT first_name FROM patients"
+    db.query(patietnt_by_firstname, (err, data)=>{
+        if(err){
+            res.status(400).send("error accessing records")
+        }
+        else{
+            res.status(200).send(data)
+        }
+        return;
+    })
+})
+
+// retrieving records by specialty
+app.get('', (req, res)=>{
+    // creating variable for query
+    let specialty_records = "SELECT specialty FROM providers"
+    db.query(specialty_records, (err, data)=>{
+        if(err){
+            res.status(400).send("error retriving records")
+        }
+        else{
+            res.status(200).send(data)
+        }
+        return
+    })
+})
